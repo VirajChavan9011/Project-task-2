@@ -1,0 +1,15 @@
+Project Task: 
+
+What is snowpipe:Snowpipe provides a “pipeline” for loading fresh data in micro-batches as soon as it is available.
+
+
+Features of snowpipe
+1. Snowpipe enables loading data from files as soon as they're available in a stage.
+2. This means you can load data from files in micro-batches, making it available to users within minutes,
+   rather than manually executing COPY statements on a schedule to load larger batch
+3. Snowpipe is Snowflake's continuous data ingestion service.
+4. Snowpipe loads data within minutes after files are added to a stage and submitted for ingestion.
+
+Snowsql - it is a command line interpreterit is used to copy the file into your local system to snowflake stage
+
+
