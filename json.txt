@@ -1,0 +1,41 @@
+--Put Json file to snowflake code
+--create table 
+create or replace table home_sales (
+  city string,
+  zip string,
+  state string,
+  type string default 'Residential',
+  sale_date timestamp_ntz,
+  price string
+  );
+
+--create file format
+create or replace file format sf_tut_json_format
+  type = json;
+  
+  --create stage
+  create or replace stage sf_tut_stage
+  
+  --create file format
+  file_format = sf_tut_json_format;
+  
+  --put the file to internal storage
+   PUT file://desktop/sales.json @sf_tut_stage;
+  
+  --show list @sf_tut_stage;
+  
+  list @sf_tut_stage;
+   
+   --Load the JSON data into the relational table.
+   
+   copy into home_sales(city, state, zip, sale_date, price)
+   from (select substr($1:location.state_city,4), substr($1:location.state_city,1,2),
+                $1:location.zip, to_timestamp_ntz($1:sale_date), $1:price
+         from @sf_tut_stage/sales.json.gz t)
+   on_error = 'continue';
+   
+   --continue-continue loading the data
+   
+   --Query the relational table                                                                                 
+
+      select * from home_sales;
