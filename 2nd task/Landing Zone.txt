@@ -10,7 +10,7 @@ Type=External_stage
 Storage_provider= S3
 enabled=True
 storage_AWS_ROLE_ARN = 'arn:aws:iam::114279968847:role/Snowflake'
-Storage_allowed_locations = ('s3://project-sql-aws-snowflake/AWS/Manually Added Data/');
+Storage_allowed_locations = ('s3://project-sql-aws-snowflake/PUBLIC/');
 
 --to describe integration
 desc integration s3_cust;
@@ -33,13 +33,13 @@ salesman_id varchar
 
 --create s3 external stage
 create or replace stage s3_stg_customers
-URL='s3://project-sql-aws-snowflake/AWS/Manually Added Data/customers/'
+URL='s3://project-sql-aws-snowflake/PUBLIC/customer/'
 Storage_integration=s3_cust
 file_format=F_cust;
 
 show stages;
 
-select * from landing_customers;
+select * from ss.LANDING_ZONE.landing_customers;
 
 --create snowpipe for automate data ingestion from s3 to snowflake
 Create OR REPLACE PIPE P_customers
@@ -64,6 +64,7 @@ alter pipe P_customers refresh;
 create or replace transient table landing_orders(         
 ord_no	varchar,
 purch_amt varchar,
+order_date varchar,
 customer_id varchar,
 salesman_id varchar
 )comment ='this is item table with in landing schema';
@@ -71,7 +72,7 @@ salesman_id varchar
 
 --create s3 external stage
 create or replace stage s3_stg_orders
-URL='s3://project-sql-aws-snowflake/AWS/Manually Added Data/orders/'
+URL='s3://project-sql-aws-snowflake/PUBLIC/orders/'
 Storage_integration=s3_cust
 file_format=F_cust;
 

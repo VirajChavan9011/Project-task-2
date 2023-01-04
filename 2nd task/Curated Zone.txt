@@ -17,44 +17,48 @@ salesman_id number(38,0)
 
 ---MOVING ALL THE DATA FROM LANDING TO CURATED
 
-INSERT INTO DBO.curated_zone.curated_customers(
+INSERT INTO ss.curated_zone.curated_customers(
     customer_id,
     cust_name,
     city,
     grade,
     salesman_id)
 select
-   (customer_id,
+   customer_id,
     cust_name,
     city,
     grade,
-    salesman_id)
-from DBO.landing_zone.landing_customers;
+    salesman_id
+from ss.LANDING_ZONE.landing_customers;
 
-
+select * from ss.curated_zone.curated_customers;
 --orders table
 
 create or replace transient table curated_orders(   
 Order_Pk number autoincrement,      
 ord_no	number (38,0),
+ord_date date,
 purch_amt number (38,0),
 customer_id number (38,0),
 salesman_id number(38,0)
 );
 
 
-INSERT INTO DBO.curated_zone.curated_orders(
+INSERT INTO ss.curated_zone.curated_orders(
 ord_no,
 purch_amt ,
+ord_date,
 customer_id ,
 salesman_id)
 select 
-(ord_no,
+ord_no,
 purch_amt ,
+order_date,
 customer_id ,
-salesman_id)
-from DBO.landing_zone.landing_orders;
+salesman_id
+from ss.landing_zone.landing_orders;
 
+select * from ss.curated_zone.curated_orders;
 
 --salesman table
 
@@ -66,16 +70,17 @@ comission number(3,2),
 salesman_id number(38,0)
 );
 
-INSERT INTO DBO.curated_zone.curated_salesman(
+INSERT INTO ss.curated_zone.curated_salesman(
 name,
 city,
 comission,
-salesman)
+salesman_id)
 select 
-(name,
+name,
 city,
 comission,
-salesman)
-from DBO.landing_zone.landing_salesman;
+salesman_id
+from ss.landing_zone.landing_salesman;
 
+select * from ss.curated_zone.curated_salesman;
 show tables;

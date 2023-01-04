@@ -8,7 +8,7 @@ use schema ss.consumption_zone;
 
 create or replace table dim_customers(
 cust_pk number autoincrement,
-customer_id	number (38,0) ,
+customer_id	number (38,0) primary key ,
 cust_name varchar(200),
 city varchar(200),
 grade number(38,0),	
@@ -40,7 +40,8 @@ order_fact_key number autoincrement,
 cust_pk number,
 salesman_pk number,
 ord_no	number (38,0) ,
-purch_amt number (38,0)
+purch_amt number (38,0),
+ord_date date
 );
 
 
@@ -50,51 +51,55 @@ show tables
 
 --customer -dimensional
 
-INSERT INTO ss.consumption_zone.dim_customers(
+INSERT INTO ss.consumption_zone.DIM_CUSTOMERS(
     customer_id,
     cust_name,
     city,
     grade,
     salesman_id)
 select
-   (customer_id,
+   customer_id,
     cust_name,
     city,
     grade,
-    salesman_id)
+    salesman_id
 from ss.curated_zone.curated_customers;
 
-
+select * from ss.consumption_zone.dim_customers;
 --salesman -dim
 
 INSERT INTO ss.consumption_zone.dim_salesman(
 name,
 city,
 comission,
-salesman)
+salesman_id)
 select 
-(name,
+name,
 city,
 comission,
-salesman)
+salesman_id
 from ss.curated_zone.curated_salesman;
 
+select * from ss.consumption_zone.dim_salesman;
 --orders -fact
 
 
-INSERT INTO ss.consumption_zone.dim_orders(
+INSERT INTO ss.consumption_zone.fact_orders(
 cust_pk ,
 salesman_pk ,
 ord_no,
-purch_amt)
+purch_amt,
+ord_date)
 select 
-(cust_pk ,
+cust_pk ,
 salesman_pk ,
 ord_no,
-purch_amt)
+purch_amt,
+ord_date
 from 
 ss.curated_zone.curated_orders as co
 join ss.consumption_zone.dim_customers as cc on co.customer_id=cc.customer_id
-join ss.consumption_zone.dim_salesman as cs on cs.salesman_id=c0.salesman_id;
+join ss.consumption_zone.dim_salesman as cs on cs.salesman_id=co.salesman_id;
 
+select * from ss.consumption_zone.fact_orders;
 show tables;
